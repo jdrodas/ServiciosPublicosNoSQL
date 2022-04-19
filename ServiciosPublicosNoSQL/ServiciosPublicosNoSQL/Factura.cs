@@ -19,6 +19,9 @@ namespace ServiciosPublicosNoSQL
         [BsonElement("estaCompleta")]
         public bool EstaCompleta { get; set; }
 
+        [BsonElement("fechaCobro")]
+        public string FechaCobro { get; set; }
+
         [BsonElement("consumos")]
         public List<Consumo> Consumos { get; set; }
     }

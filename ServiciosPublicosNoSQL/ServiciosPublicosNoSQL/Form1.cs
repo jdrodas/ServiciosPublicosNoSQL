@@ -73,6 +73,7 @@ namespace ServiciosPublicosNoSQL
             //Aqui actualizamos los campos informativos de la factura
             txtPeriodo.Text = unaFactura.Periodo;
             txtValor.Text = unaFactura.Valor.ToString("00.00");
+            txtFechaCobro.Text = unaFactura.FechaCobro;
             
             if (unaFactura.EstaCompleta)
                 txtEstado.Text = "Completa";
