@@ -30,20 +30,20 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.paginaConsulta = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.listaPeriodos = new System.Windows.Forms.ListBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtPeriodo = new System.Windows.Forms.TextBox();
-            this.txtValor = new System.Windows.Forms.TextBox();
-            this.txtEstado = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.dataGridViewDetalleServicios = new System.Windows.Forms.DataGridView();
-            this.label6 = new System.Windows.Forms.Label();
-            this.btnRecalcularFactura = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.label7 = new System.Windows.Forms.Label();
             this.txtFechaCobro = new System.Windows.Forms.TextBox();
+            this.btnRecalcularFactura = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.dataGridViewDetalleServicios = new System.Windows.Forms.DataGridView();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtEstado = new System.Windows.Forms.TextBox();
+            this.txtValor = new System.Windows.Forms.TextBox();
+            this.txtPeriodo = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.listaPeriodos = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.paginaConsulta.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetalleServicios)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -83,111 +83,6 @@
             this.paginaConsulta.Text = "Consulta";
             this.paginaConsulta.UseVisualStyleBackColor = true;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 23);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Periodos registrados:";
-            // 
-            // listaPeriodos
-            // 
-            this.listaPeriodos.FormattingEnabled = true;
-            this.listaPeriodos.Location = new System.Drawing.Point(23, 52);
-            this.listaPeriodos.Name = "listaPeriodos";
-            this.listaPeriodos.Size = new System.Drawing.Size(120, 95);
-            this.listaPeriodos.TabIndex = 1;
-            this.listaPeriodos.SelectedIndexChanged += new System.EventHandler(this.listaPeriodos_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(219, 26);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Periodo:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(231, 56);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Valor:";
-            // 
-            // txtPeriodo
-            // 
-            this.txtPeriodo.Location = new System.Drawing.Point(269, 23);
-            this.txtPeriodo.Name = "txtPeriodo";
-            this.txtPeriodo.Size = new System.Drawing.Size(100, 20);
-            this.txtPeriodo.TabIndex = 2;
-            this.txtPeriodo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtValor
-            // 
-            this.txtValor.Location = new System.Drawing.Point(269, 53);
-            this.txtValor.Name = "txtValor";
-            this.txtValor.Size = new System.Drawing.Size(100, 20);
-            this.txtValor.TabIndex = 4;
-            this.txtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtEstado
-            // 
-            this.txtEstado.Location = new System.Drawing.Point(269, 83);
-            this.txtEstado.Name = "txtEstado";
-            this.txtEstado.Size = new System.Drawing.Size(100, 20);
-            this.txtEstado.TabIndex = 6;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(179, 86);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "¿Está completa?";
-            // 
-            // dataGridViewDetalleServicios
-            // 
-            this.dataGridViewDetalleServicios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewDetalleServicios.Location = new System.Drawing.Point(179, 193);
-            this.dataGridViewDetalleServicios.Name = "dataGridViewDetalleServicios";
-            this.dataGridViewDetalleServicios.Size = new System.Drawing.Size(561, 167);
-            this.dataGridViewDetalleServicios.TabIndex = 8;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(176, 173);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(255, 13);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Detalle de los consumos por servicio para el periodo:";
-            // 
-            // btnRecalcularFactura
-            // 
-            this.btnRecalcularFactura.Location = new System.Drawing.Point(425, 82);
-            this.btnRecalcularFactura.Name = "btnRecalcularFactura";
-            this.btnRecalcularFactura.Size = new System.Drawing.Size(135, 23);
-            this.btnRecalcularFactura.TabIndex = 10;
-            this.btnRecalcularFactura.Text = "Recalcular Factura";
-            this.btnRecalcularFactura.UseVisualStyleBackColor = true;
-            this.btnRecalcularFactura.Click += new System.EventHandler(this.btnRecalcularFactura_Click);
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.paginaConsulta);
-            this.tabControl1.Location = new System.Drawing.Point(12, 71);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(776, 407);
-            this.tabControl1.TabIndex = 0;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -201,8 +96,113 @@
             // 
             this.txtFechaCobro.Location = new System.Drawing.Point(269, 113);
             this.txtFechaCobro.Name = "txtFechaCobro";
-            this.txtFechaCobro.Size = new System.Drawing.Size(100, 20);
+            this.txtFechaCobro.Size = new System.Drawing.Size(130, 20);
             this.txtFechaCobro.TabIndex = 11;
+            // 
+            // btnRecalcularFactura
+            // 
+            this.btnRecalcularFactura.Location = new System.Drawing.Point(425, 82);
+            this.btnRecalcularFactura.Name = "btnRecalcularFactura";
+            this.btnRecalcularFactura.Size = new System.Drawing.Size(135, 23);
+            this.btnRecalcularFactura.TabIndex = 10;
+            this.btnRecalcularFactura.Text = "Recalcular Factura";
+            this.btnRecalcularFactura.UseVisualStyleBackColor = true;
+            this.btnRecalcularFactura.Click += new System.EventHandler(this.btnRecalcularFactura_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(176, 173);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(255, 13);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Detalle de los consumos por servicio para el periodo:";
+            // 
+            // dataGridViewDetalleServicios
+            // 
+            this.dataGridViewDetalleServicios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewDetalleServicios.Location = new System.Drawing.Point(179, 193);
+            this.dataGridViewDetalleServicios.Name = "dataGridViewDetalleServicios";
+            this.dataGridViewDetalleServicios.Size = new System.Drawing.Size(561, 167);
+            this.dataGridViewDetalleServicios.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(179, 86);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(86, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "¿Está completa?";
+            // 
+            // txtEstado
+            // 
+            this.txtEstado.Location = new System.Drawing.Point(269, 83);
+            this.txtEstado.Name = "txtEstado";
+            this.txtEstado.Size = new System.Drawing.Size(130, 20);
+            this.txtEstado.TabIndex = 6;
+            // 
+            // txtValor
+            // 
+            this.txtValor.Location = new System.Drawing.Point(269, 53);
+            this.txtValor.Name = "txtValor";
+            this.txtValor.Size = new System.Drawing.Size(130, 20);
+            this.txtValor.TabIndex = 4;
+            this.txtValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtPeriodo
+            // 
+            this.txtPeriodo.Location = new System.Drawing.Point(269, 23);
+            this.txtPeriodo.Name = "txtPeriodo";
+            this.txtPeriodo.Size = new System.Drawing.Size(130, 20);
+            this.txtPeriodo.TabIndex = 2;
+            this.txtPeriodo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(231, 56);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Valor:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(219, 26);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Periodo:";
+            // 
+            // listaPeriodos
+            // 
+            this.listaPeriodos.FormattingEnabled = true;
+            this.listaPeriodos.Location = new System.Drawing.Point(23, 52);
+            this.listaPeriodos.Name = "listaPeriodos";
+            this.listaPeriodos.Size = new System.Drawing.Size(120, 95);
+            this.listaPeriodos.TabIndex = 1;
+            this.listaPeriodos.SelectedIndexChanged += new System.EventHandler(this.listaPeriodos_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(20, 23);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(126, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Periodos registrados:";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.paginaConsulta);
+            this.tabControl1.Location = new System.Drawing.Point(12, 71);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(776, 407);
+            this.tabControl1.TabIndex = 0;
             // 
             // Form1
             // 

@@ -73,12 +73,22 @@ namespace ServiciosPublicosNoSQL
             //Aqui actualizamos los campos informativos de la factura
             txtPeriodo.Text = unaFactura.Periodo;
             txtValor.Text = unaFactura.Valor.ToString("00.00");
-            txtFechaCobro.Text = unaFactura.FechaCobro;
+
             
             if (unaFactura.EstaCompleta)
                 txtEstado.Text = "Completa";
             else
                 txtEstado.Text = "Incompleta";
+
+            //Aqui Validamos si la factura tiene fecha de cobro
+            //Si el año es 1, debe visualizarse como incompleta
+            if (unaFactura.FechaCobro.Year == 1)
+            {
+                txtFechaCobro.Text = "Sin fecha";
+                txtEstado.Text = "Incompleta";
+            }
+            else
+                txtFechaCobro.Text = unaFactura.FechaCobro.ToString("MM/dd/yyyy hh:mm tt");
 
             //Actualizamos el dataGridView con el detalle de los consumos para la factura
             dataGridViewDetalleServicios.DataSource = null;

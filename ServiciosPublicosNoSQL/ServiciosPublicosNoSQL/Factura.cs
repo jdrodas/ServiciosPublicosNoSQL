@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -20,7 +21,8 @@ namespace ServiciosPublicosNoSQL
         public bool EstaCompleta { get; set; }
 
         [BsonElement("fechaCobro")]
-        public string FechaCobro { get; set; }
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        public DateTime FechaCobro { get; set; }
 
         [BsonElement("consumos")]
         public List<Consumo> Consumos { get; set; }

@@ -141,7 +141,6 @@ namespace ServiciosPublicosNoSQL
         {
             Factura unaFactura = ObtieneUnaFactura(periodoFactura);
             double nuevoValorFactura = 0;
-            string fechaCobro = DateTime.Now.ToString("dd/MM/yyyy");
 
             //Recorremos la colección de consumos para obtener el nuevo valor de factura
             foreach (Consumo unConsumo in unaFactura.Consumos)
@@ -154,7 +153,7 @@ namespace ServiciosPublicosNoSQL
 
             unaFactura.Valor = nuevoValorFactura;
             unaFactura.EstaCompleta = true;
-            unaFactura.FechaCobro = fechaCobro;
+            unaFactura.FechaCobro = DateTime.Now;
 
             ActualizaFactura(unaFactura);
         }
