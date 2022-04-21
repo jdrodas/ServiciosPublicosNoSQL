@@ -14,6 +14,11 @@ namespace ServiciosPublicosNoSQL
         const string nombreDB = "SERVPUB";
         const string idStringConexion = "serviciosPublicosDB";
 
+        /// <summary>
+        /// Obtiene la cadena de conexión para realizar las operaciones en DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private static string ObtieneCadenaConexion(string id)
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
@@ -137,23 +142,47 @@ namespace ServiciosPublicosNoSQL
             return tablaResultado;
         }
 
+        /// <summary>
+        /// Recalcula los valores de los consumos y valor de la factura basado en el consumo
+        /// </summary>
+        /// <param name="periodoFactura">Factura para recalcular</param>
         public static void RecalculaValorFactura(string periodoFactura)
         {
             Factura unaFactura = ObtieneUnaFactura(periodoFactura);
             double nuevoValorFactura = 0;
+            bool tieneConsumosPendientes = false;
 
             //Recorremos la colección de consumos para obtener el nuevo valor de factura
             foreach (Consumo unConsumo in unaFactura.Consumos)
             {
                 if (unConsumo.ValorConsumo == 0)
+                {
                     unConsumo.ValorConsumo = unConsumo.UnidadesConsumidas * unConsumo.Tarifa;
-                
+
+                    //Si luego del calculo el consumo sigue en 0, la factura tiene 
+                    //Consumos sin valor
+                    if (unConsumo.ValorConsumo == 0)
+                        tieneConsumosPendientes = true;
+                }                    
                 nuevoValorFactura += unConsumo.ValorConsumo;                
             }
 
             unaFactura.Valor = nuevoValorFactura;
-            unaFactura.EstaCompleta = true;
-            unaFactura.FechaCobro = DateTime.Now;
+
+            //Si no tiene consumos pendientes, se puede cerrar
+            if (!tieneConsumosPendientes)
+            {
+                if (!unaFactura.EstaCompleta)
+                {
+                    unaFactura.EstaCompleta = true;
+                    unaFactura.FechaCobro = DateTime.Now;
+                }
+            }
+            else
+            {
+                unaFactura.EstaCompleta = false;
+                unaFactura.FechaCobro = new DateTime();
+            }
 
             ActualizaFactura(unaFactura);
         }
@@ -170,6 +199,111 @@ namespace ServiciosPublicosNoSQL
 
             var unaColeccion = miDB.GetCollection<Factura>("Facturas");
             unaColeccion.ReplaceOne(documento => documento.Id == unaFactura.Id, unaFactura);
+        }
+
+        public static void BorraFactura(string periodoFactura)
+        {
+            string cadenaConexion = ObtieneCadenaConexion(idStringConexion);
+            var clienteDB = new MongoClient(cadenaConexion);
+            var miDB = clienteDB.GetDatabase(nombreDB);
+
+            var unaColeccion = miDB.GetCollection<Factura>("Facturas");
+            unaColeccion.DeleteOne(documento => documento.Periodo == periodoFactura);            
+        }
+
+        /// <summary>
+        /// Inserta una factura en la base de datos
+        /// </summary>
+        /// <param name="unaFactura">El objeto factura a insertar</param>
+        public static void InsertaNuevaFactura(Factura factura)
+        {
+            string cadenaConexion = ObtieneCadenaConexion(idStringConexion);
+            var clienteDB = new MongoClient(cadenaConexion);
+            var miDB = clienteDB.GetDatabase(nombreDB);
+
+            var unaColeccion = miDB.GetCollection<Factura>("Facturas");
+            unaColeccion.InsertOne(factura);
+        }
+
+        /// <summary>
+        /// Obtiene una lista con los nombres de los servicios registrados en la colección
+        /// </summary>
+        /// <returns>La lista de los nombres de servicios</returns>
+        public static List<string> ObtieneListaNombreServicios()
+        {
+            List<string> listaResultados = new List<string>();
+            List<Servicio> ListaServicios = ObtieneServicios();
+
+            foreach (Servicio unServicio in ListaServicios)
+                listaResultados.Add(unServicio.Nombre);
+
+            listaResultados.Sort();
+
+            return listaResultados;
+        }
+
+        /// <summary>
+        /// Obtiene la lista de servicios registrados en la DB
+        /// </summary>
+        /// <returns>La lista de servicios</returns>
+        public static List<Servicio> ObtieneServicios()
+        {
+            string cadenaConexion = ObtieneCadenaConexion(idStringConexion);
+            var clienteDB = new MongoClient(cadenaConexion);
+            var miDB = clienteDB.GetDatabase(nombreDB);
+
+            return ObtenerRegistros<Servicio>(miDB, "Servicios");
+        }
+
+        public static Consumo ObtieneConsumoServicio(string periodoFactura, string nombreServicio)
+        {
+            Factura laFactura = ObtieneUnaFactura(periodoFactura);
+            Consumo elConsumo = laFactura.Consumos.Find(x => x.Servicio == nombreServicio);
+
+            if (elConsumo is null)
+            {
+                elConsumo = new Consumo
+                {
+                    Servicio = nombreServicio,
+                    UnidadesConsumidas = 0,
+                    Tarifa = 0,
+                    ValorConsumo = 0
+                };
+
+                laFactura.Consumos.Add(elConsumo);
+                //Finalmente, actualizamos la factura
+                ActualizaFactura(laFactura);
+            }
+
+            return elConsumo;
+        }
+
+        public static void ActualizaConsumoEnFactura(string periodoFactura, Consumo nuevoConsumo)
+        {
+            //Buscamos la factura asociada al periodo
+            Factura unaFactura = ObtieneUnaFactura(periodoFactura);
+
+            //Buscamos el consumo que necesitamos actualizar
+            Consumo viejoConsumo = unaFactura.Consumos.Find(x => x.Servicio == nuevoConsumo.Servicio);
+            unaFactura.Consumos.Remove(viejoConsumo);
+            unaFactura.Consumos.Add(nuevoConsumo);
+
+            //Recalculamos el valor de factura
+            double nuevoValorFactura = 0;
+
+            //Recorremos la colección de consumos para obtener el nuevo valor de factura
+            foreach (Consumo unConsumo in unaFactura.Consumos)
+            {
+                if (unConsumo.ValorConsumo == 0)
+                    unConsumo.ValorConsumo = unConsumo.UnidadesConsumidas * unConsumo.Tarifa;
+
+                nuevoValorFactura += unConsumo.ValorConsumo;
+            }
+
+            unaFactura.Valor = nuevoValorFactura;
+
+            //Finalmente, actualizamos la factura
+            ActualizaFactura(unaFactura);
         }
     }
 }
