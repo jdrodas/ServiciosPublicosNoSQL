@@ -44,12 +44,15 @@
             this.listaPeriodos = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tabControlCrud = new System.Windows.Forms.TabControl();
-            this.PaginaCreacion = new System.Windows.Forms.TabPage();
+            this.paginaCreacion = new System.Windows.Forms.TabPage();
             this.groupBoxDetalleServicio = new System.Windows.Forms.GroupBox();
+            this.listaServicios = new System.Windows.Forms.ListBox();
+            this.lblValorFactura = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtValorConsumo = new System.Windows.Forms.TextBox();
             this.btnFinalizar = new System.Windows.Forms.Button();
-            this.btnCancelarFactura = new System.Windows.Forms.Button();
+            this.btnBorrarFactura = new System.Windows.Forms.Button();
             this.lblPeriodo = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.btnActualizarConsumoServicio = new System.Windows.Forms.Button();
@@ -62,13 +65,10 @@
             this.btnNuevaFactura = new System.Windows.Forms.Button();
             this.lblSelectorPeriodo = new System.Windows.Forms.Label();
             this.dtpPeriodo = new System.Windows.Forms.DateTimePicker();
-            this.lblValorFactura = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.lstServicios = new System.Windows.Forms.ListBox();
             this.paginaConsulta.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetalleServicios)).BeginInit();
             this.tabControlCrud.SuspendLayout();
-            this.PaginaCreacion.SuspendLayout();
+            this.paginaCreacion.SuspendLayout();
             this.groupBoxDetalleServicio.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetalleConsumos)).BeginInit();
             this.SuspendLayout();
@@ -104,7 +104,7 @@
             this.paginaConsulta.Padding = new System.Windows.Forms.Padding(3);
             this.paginaConsulta.Size = new System.Drawing.Size(768, 381);
             this.paginaConsulta.TabIndex = 0;
-            this.paginaConsulta.Text = "Consulta";
+            this.paginaConsulta.Text = "Consulta Factura";
             this.paginaConsulta.UseVisualStyleBackColor = true;
             this.paginaConsulta.Enter += new System.EventHandler(this.paginaConsulta_Enter);
             // 
@@ -223,37 +223,37 @@
             // tabControlCrud
             // 
             this.tabControlCrud.Controls.Add(this.paginaConsulta);
-            this.tabControlCrud.Controls.Add(this.PaginaCreacion);
+            this.tabControlCrud.Controls.Add(this.paginaCreacion);
             this.tabControlCrud.Location = new System.Drawing.Point(12, 71);
             this.tabControlCrud.Name = "tabControlCrud";
             this.tabControlCrud.SelectedIndex = 0;
             this.tabControlCrud.Size = new System.Drawing.Size(776, 407);
             this.tabControlCrud.TabIndex = 0;
             // 
-            // PaginaCreacion
+            // paginaCreacion
             // 
-            this.PaginaCreacion.Controls.Add(this.groupBoxDetalleServicio);
-            this.PaginaCreacion.Controls.Add(this.btnNuevaFactura);
-            this.PaginaCreacion.Controls.Add(this.lblSelectorPeriodo);
-            this.PaginaCreacion.Controls.Add(this.dtpPeriodo);
-            this.PaginaCreacion.Location = new System.Drawing.Point(4, 22);
-            this.PaginaCreacion.Name = "PaginaCreacion";
-            this.PaginaCreacion.Padding = new System.Windows.Forms.Padding(3);
-            this.PaginaCreacion.Size = new System.Drawing.Size(768, 381);
-            this.PaginaCreacion.TabIndex = 1;
-            this.PaginaCreacion.Text = "Agregar Factura";
-            this.PaginaCreacion.UseVisualStyleBackColor = true;
-            this.PaginaCreacion.Leave += new System.EventHandler(this.PaginaCreacion_Leave);
+            this.paginaCreacion.Controls.Add(this.groupBoxDetalleServicio);
+            this.paginaCreacion.Controls.Add(this.btnNuevaFactura);
+            this.paginaCreacion.Controls.Add(this.lblSelectorPeriodo);
+            this.paginaCreacion.Controls.Add(this.dtpPeriodo);
+            this.paginaCreacion.Location = new System.Drawing.Point(4, 22);
+            this.paginaCreacion.Name = "paginaCreacion";
+            this.paginaCreacion.Padding = new System.Windows.Forms.Padding(3);
+            this.paginaCreacion.Size = new System.Drawing.Size(768, 381);
+            this.paginaCreacion.TabIndex = 1;
+            this.paginaCreacion.Text = "Agregar / Editar Factura";
+            this.paginaCreacion.UseVisualStyleBackColor = true;
+            this.paginaCreacion.Leave += new System.EventHandler(this.paginaCreacion_Leave);
             // 
             // groupBoxDetalleServicio
             // 
-            this.groupBoxDetalleServicio.Controls.Add(this.lstServicios);
+            this.groupBoxDetalleServicio.Controls.Add(this.listaServicios);
             this.groupBoxDetalleServicio.Controls.Add(this.lblValorFactura);
             this.groupBoxDetalleServicio.Controls.Add(this.label14);
             this.groupBoxDetalleServicio.Controls.Add(this.label8);
             this.groupBoxDetalleServicio.Controls.Add(this.txtValorConsumo);
             this.groupBoxDetalleServicio.Controls.Add(this.btnFinalizar);
-            this.groupBoxDetalleServicio.Controls.Add(this.btnCancelarFactura);
+            this.groupBoxDetalleServicio.Controls.Add(this.btnBorrarFactura);
             this.groupBoxDetalleServicio.Controls.Add(this.lblPeriodo);
             this.groupBoxDetalleServicio.Controls.Add(this.label12);
             this.groupBoxDetalleServicio.Controls.Add(this.btnActualizarConsumoServicio);
@@ -269,6 +269,35 @@
             this.groupBoxDetalleServicio.TabIndex = 3;
             this.groupBoxDetalleServicio.TabStop = false;
             this.groupBoxDetalleServicio.Text = "Detalle de consumo por servicio:";
+            // 
+            // listaServicios
+            // 
+            this.listaServicios.FormattingEnabled = true;
+            this.listaServicios.Location = new System.Drawing.Point(135, 54);
+            this.listaServicios.Name = "listaServicios";
+            this.listaServicios.Size = new System.Drawing.Size(116, 69);
+            this.listaServicios.TabIndex = 15;
+            this.listaServicios.SelectedIndexChanged += new System.EventHandler(this.listaServicios_SelectedIndexChanged);
+            // 
+            // lblValorFactura
+            // 
+            this.lblValorFactura.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorFactura.ForeColor = System.Drawing.Color.Teal;
+            this.lblValorFactura.Location = new System.Drawing.Point(95, 251);
+            this.lblValorFactura.Name = "lblValorFactura";
+            this.lblValorFactura.Size = new System.Drawing.Size(90, 13);
+            this.lblValorFactura.TabIndex = 14;
+            this.lblValorFactura.Text = "dato_valor";
+            this.lblValorFactura.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(17, 251);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(73, 13);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "Valor Factura:";
             // 
             // label8
             // 
@@ -291,23 +320,23 @@
             // 
             // btnFinalizar
             // 
-            this.btnFinalizar.Location = new System.Drawing.Point(613, 240);
+            this.btnFinalizar.Location = new System.Drawing.Point(578, 241);
             this.btnFinalizar.Name = "btnFinalizar";
-            this.btnFinalizar.Size = new System.Drawing.Size(75, 23);
+            this.btnFinalizar.Size = new System.Drawing.Size(111, 23);
             this.btnFinalizar.TabIndex = 10;
-            this.btnFinalizar.Text = "Finalizar";
+            this.btnFinalizar.Text = "Finalizar Factura";
             this.btnFinalizar.UseVisualStyleBackColor = true;
             this.btnFinalizar.Click += new System.EventHandler(this.btnFinalizar_Click);
             // 
-            // btnCancelarFactura
+            // btnBorrarFactura
             // 
-            this.btnCancelarFactura.Location = new System.Drawing.Point(532, 241);
-            this.btnCancelarFactura.Name = "btnCancelarFactura";
-            this.btnCancelarFactura.Size = new System.Drawing.Size(75, 23);
-            this.btnCancelarFactura.TabIndex = 9;
-            this.btnCancelarFactura.Text = "Cancelar";
-            this.btnCancelarFactura.UseVisualStyleBackColor = true;
-            this.btnCancelarFactura.Click += new System.EventHandler(this.btnCancelarFactura_Click);
+            this.btnBorrarFactura.Location = new System.Drawing.Point(444, 241);
+            this.btnBorrarFactura.Name = "btnBorrarFactura";
+            this.btnBorrarFactura.Size = new System.Drawing.Size(116, 23);
+            this.btnBorrarFactura.TabIndex = 9;
+            this.btnBorrarFactura.Text = "Borrar Factura";
+            this.btnBorrarFactura.UseVisualStyleBackColor = true;
+            this.btnBorrarFactura.Click += new System.EventHandler(this.btnBorrarFactura_Click);
             // 
             // lblPeriodo
             // 
@@ -330,7 +359,7 @@
             // 
             // btnActualizarConsumoServicio
             // 
-            this.btnActualizarConsumoServicio.Location = new System.Drawing.Point(560, 98);
+            this.btnActualizarConsumoServicio.Location = new System.Drawing.Point(561, 97);
             this.btnActualizarConsumoServicio.Name = "btnActualizarConsumoServicio";
             this.btnActualizarConsumoServicio.Size = new System.Drawing.Size(128, 23);
             this.btnActualizarConsumoServicio.TabIndex = 7;
@@ -397,9 +426,9 @@
             // 
             this.btnNuevaFactura.Location = new System.Drawing.Point(209, 20);
             this.btnNuevaFactura.Name = "btnNuevaFactura";
-            this.btnNuevaFactura.Size = new System.Drawing.Size(102, 23);
+            this.btnNuevaFactura.Size = new System.Drawing.Size(165, 23);
             this.btnNuevaFactura.TabIndex = 2;
-            this.btnNuevaFactura.Text = "Crear Factura";
+            this.btnNuevaFactura.Text = "Crear / Editar Factura";
             this.btnNuevaFactura.UseVisualStyleBackColor = true;
             this.btnNuevaFactura.Click += new System.EventHandler(this.btnNuevaFactura_Click);
             // 
@@ -421,35 +450,6 @@
             this.dtpPeriodo.Size = new System.Drawing.Size(85, 20);
             this.dtpPeriodo.TabIndex = 0;
             // 
-            // lblValorFactura
-            // 
-            this.lblValorFactura.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValorFactura.ForeColor = System.Drawing.Color.Teal;
-            this.lblValorFactura.Location = new System.Drawing.Point(95, 251);
-            this.lblValorFactura.Name = "lblValorFactura";
-            this.lblValorFactura.Size = new System.Drawing.Size(90, 13);
-            this.lblValorFactura.TabIndex = 14;
-            this.lblValorFactura.Text = "dato_valor";
-            this.lblValorFactura.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(17, 251);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(73, 13);
-            this.label14.TabIndex = 13;
-            this.label14.Text = "Valor Factura:";
-            // 
-            // lstServicios
-            // 
-            this.lstServicios.FormattingEnabled = true;
-            this.lstServicios.Location = new System.Drawing.Point(135, 54);
-            this.lstServicios.Name = "lstServicios";
-            this.lstServicios.Size = new System.Drawing.Size(116, 69);
-            this.lstServicios.TabIndex = 15;
-            this.lstServicios.SelectedIndexChanged += new System.EventHandler(this.lstServicios_SelectedIndexChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,8 +465,8 @@
             this.paginaConsulta.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetalleServicios)).EndInit();
             this.tabControlCrud.ResumeLayout(false);
-            this.PaginaCreacion.ResumeLayout(false);
-            this.PaginaCreacion.PerformLayout();
+            this.paginaCreacion.ResumeLayout(false);
+            this.paginaCreacion.PerformLayout();
             this.groupBoxDetalleServicio.ResumeLayout(false);
             this.groupBoxDetalleServicio.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetalleConsumos)).EndInit();
@@ -492,7 +492,7 @@
         private System.Windows.Forms.TabControl tabControlCrud;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtFechaCobro;
-        private System.Windows.Forms.TabPage PaginaCreacion;
+        private System.Windows.Forms.TabPage paginaCreacion;
         private System.Windows.Forms.Label lblSelectorPeriodo;
         private System.Windows.Forms.DateTimePicker dtpPeriodo;
         private System.Windows.Forms.Button btnNuevaFactura;
@@ -507,12 +507,12 @@
         private System.Windows.Forms.Label lblPeriodo;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnFinalizar;
-        private System.Windows.Forms.Button btnCancelarFactura;
+        private System.Windows.Forms.Button btnBorrarFactura;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtValorConsumo;
         private System.Windows.Forms.Label lblValorFactura;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ListBox lstServicios;
+        private System.Windows.Forms.ListBox listaServicios;
     }
 }
 

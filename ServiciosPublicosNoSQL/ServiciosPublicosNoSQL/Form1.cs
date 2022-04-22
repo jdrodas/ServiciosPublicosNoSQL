@@ -6,15 +6,12 @@ namespace ServiciosPublicosNoSQL
 {
     public partial class Form1 : Form
     {
-        /// <summary>
-        /// Constructor de la clase
-        /// </summary>
         public Form1()
         {
             InitializeComponent();
         }
 
-        //Eventos asociados a los controles
+        #region EventosControles
 
         /// <summary>
         /// Evento asociado al comienzo de la aplicación, cargue de la forma
@@ -32,8 +29,39 @@ namespace ServiciosPublicosNoSQL
             if ((listaPeriodos.DataSource is null) == false)
             {
                 string periodoFactura = listaPeriodos.SelectedItem.ToString();
-                ActualizaCamposFactura(periodoFactura);
+                ActualizaCamposConsultaFactura(periodoFactura);
             }
+        }
+
+        /// <summary>
+        /// Evento para el cambio de elemento seleccionado en la lista de servicios
+        /// </summary>
+        private void listaServicios_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if((listaServicios.DataSource is null) == false)            
+                if (lblPeriodo.Text != "dato_periodo")
+                {
+                    string periodoFactura = lblPeriodo.Text;
+                    string nombreServicio = listaServicios.SelectedItem.ToString();
+                    ActualizaCamposConsumo(periodoFactura, nombreServicio);
+                }
+        }
+
+        /// <summary>
+        /// Evento asociado a la salida de foco de la página de creacion de factura
+        /// </summary>
+        private void paginaCreacion_Leave(object sender, EventArgs e)
+        {
+            //Se reinicia la interfaz de esta página
+            InicializaPaginaCreacionFactura();
+        }
+
+        /// <summary>
+        /// Evento asociado a la entrada de foco de la pagina de consulta de factura
+        /// </summary>
+        private void paginaConsulta_Enter(object sender, EventArgs e)
+        {
+            InicializaListaPeriodoFacturas();
         }
 
         /// <summary>
@@ -43,44 +71,145 @@ namespace ServiciosPublicosNoSQL
         {
             string periodoFactura = txtPeriodo.Text;
             AccesoDatos.RecalculaValorFactura(periodoFactura);
-            ActualizaCamposFactura(periodoFactura);
+
+            //Finalmente actualizamos los campos de la UI
+            ActualizaCamposConsultaFactura(periodoFactura);
         }
 
         /// <summary>
-        /// Evento para el botón de creación de nueva factura
+        /// Evento para el botón de creación / edición de factura
         /// </summary>
         private void btnNuevaFactura_Click(object sender, EventArgs e)
         {
             string periodo = dtpPeriodo.Text;
 
+            //Aqui modificamos la interfaz a la funcionalidad activa
+            groupBoxDetalleServicio.Visible = true;
+            lblSelectorPeriodo.Visible = false;
+            dtpPeriodo.Visible = false;
+            btnNuevaFactura.Visible = false;
+            lblValorFactura.Text = "0";
+            lblPeriodo.Text = periodo;
+
             //Vericamos si hay factura para ese periodo
             Factura unaFactura = AccesoDatos.ObtieneUnaFactura(periodo);
             if (unaFactura is null)
             {
-                groupBoxDetalleServicio.Visible = true;
-                lblSelectorPeriodo.Visible = false;
-                dtpPeriodo.Visible = false;
-                btnNuevaFactura.Visible = false;
-
-                CrearNuevaFactura(periodo);
-            }            
+                //Aqui creamos una nueva Factura
+                AccesoDatos.CreaFactura(periodo);
+            }
             else
                 MessageBox.Show($"Ya existe factura para {periodo}. " +
-                    $"Utiliza la opción de editar si quieres cambiar valores",
+                    $"Se podrán editar consumos y recalcular valores",
                     "Factura ya existe",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+
+            //Actualizamos la lista de servicios que se utilizarán para manipular la factura
+            InicializaListaServicios();
+
+            //Actualizamos el dataGridView con el detalle de los consumos para la factura
+            ActualizaDataGridConsumosServicios(periodo, dataGridViewDetalleConsumos);
         }
+
+        /// <summary>
+        /// Evento asociado al botón de borrar la factura
+        /// </summary>
+        private void btnBorrarFactura_Click(object sender, EventArgs e)
+        {
+            string periodo = lblPeriodo.Text;
+
+            DialogResult resultadoConfirmacion =
+                MessageBox.Show($"¿Está seguro que desea borrar la factura " +
+                    $"para el periodo {periodo}?",
+                    "Confirmación borrado factura",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+
+            // Si presionó el botón de SI, se procede a borrar la factura
+            if (resultadoConfirmacion == DialogResult.Yes)
+            {
+                AccesoDatos.BorraFactura(periodo);
+
+                //Reiniciamos la interfaz de usuario
+                InicializaPaginaCreacionFactura();
+            }
+        }
+
+        /// <summary>
+        /// Evento asociado al botón de finalizar la factura
+        /// </summary>
+        private void btnFinalizar_Click(object sender, EventArgs e)
+        {
+            //Se finaliza la factura, colocandola en completa
+            string periodoFactura = lblPeriodo.Text;
+            AccesoDatos.RecalculaValorFactura(periodoFactura);
+
+            //Se reinicia la interfaz de esta página
+            InicializaPaginaCreacionFactura();
+        }
+
+        /// <summary>
+        /// Evento asociado al botón de actualizar consumo del servicio activo
+        /// </summary>
+        private void btnActualizarConsumoServicio_Click(object sender, EventArgs e)
+        {
+            CalculaConsumoServicio();
+        }
+
+        /// <summary>
+        /// Evento asociado a la salida de foco del textbox de Unidades Consumidas
+        /// </summary>
+        private void txtUnidadesConsumidas_Leave(object sender, EventArgs e)
+        {
+            CalculaConsumoServicio();
+        }
+
+        /// <summary>
+        /// Evento asociado a la salida de foco del textbox de la tarifa
+        /// </summary>
+        private void txtTarifa_Leave(object sender, EventArgs e)
+        {
+            CalculaConsumoServicio();
+        }
+
+        #endregion EventosControles
+
+        #region MetodosInterfaz
 
         /// <summary>
         /// Encapsula los llamados para inicializar los controles de la UI
         /// </summary>
         private void InicializaInterfaz()
         {
+            //En la página de consulta de facturas
             InicializaListaPeriodoFacturas();
+
+            //En la página de Creacion/Edición de facturas
+            InicializaPaginaCreacionFactura();
+        }
+
+        /// <summary>
+        /// Inicializa los controles de la UI asociados a la página de creacion/edicion de factura
+        /// </summary>
+        private void InicializaPaginaCreacionFactura()
+        {
+            //Valor predeterminado del periodo
+            lblPeriodo.Text = "dato_periodo";
+            txtUnidadesConsumidas.Text = "0";
+            txtTarifa.Text = "0";
+            txtValorConsumo.Text = "0";
+
+            lblSelectorPeriodo.Visible = true;
+            dtpPeriodo.Visible = true;
+            dtpPeriodo.Value = DateTime.Now;
+            btnNuevaFactura.Visible = true;
 
             //En la página de creación de factura, se oculta el detalle de los servicios
             groupBoxDetalleServicio.Visible = false;
+
+            InicializaListaServicios();
         }
 
         /// <summary>
@@ -94,10 +223,34 @@ namespace ServiciosPublicosNoSQL
         }
 
         /// <summary>
-        /// Actualiza los campos de la UI asociados a la información de la factura
+        /// Inicializa la lista de Servicios para utilizar en la creación / edición de facturas
+        /// </summary>
+        private void InicializaListaServicios()
+        {
+            listaServicios.DataSource = null;
+            listaServicios.DataSource = AccesoDatos.ObtieneListaNombreServicios();
+            listaServicios.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// Actualiza los campos de la UI asociados a los consumos de un servicio en una factura
         /// </summary>
         /// <param name="periodoFactura">Periodo para el cual se consulta factura</param>
-        private void ActualizaCamposFactura(string periodoFactura)
+        /// <param name="nombreServicio">Servicio para el cual se consulta el consumo</param>
+        private void ActualizaCamposConsumo(string periodoFactura, string nombreServicio)
+        {
+            Consumo elConsumo = AccesoDatos.ObtieneConsumoServicio(periodoFactura, nombreServicio);
+
+            txtUnidadesConsumidas.Text = elConsumo.UnidadesConsumidas.ToString();
+            txtTarifa.Text = elConsumo.Tarifa.ToString();
+            txtValorConsumo.Text = elConsumo.ValorConsumo.ToString();
+        }
+
+        /// <summary>
+        /// Actualiza los campos de la UI asociados a la consulta de la factura
+        /// </summary>
+        /// <param name="periodoFactura">Periodo para el cual se consulta factura</param>
+        private void ActualizaCamposConsultaFactura(string periodoFactura)
         {
             //Aqui obtenemos la factura que cumple con el parámetro de periodo
             Factura unaFactura = AccesoDatos.ObtieneUnaFactura(periodoFactura);
@@ -106,7 +259,7 @@ namespace ServiciosPublicosNoSQL
             txtPeriodo.Text = unaFactura.Periodo;
             txtValor.Text = unaFactura.Valor.ToString("00.00");
 
-            
+
             if (unaFactura.EstaCompleta)
                 txtEstado.Text = "Completa";
             else
@@ -123,170 +276,54 @@ namespace ServiciosPublicosNoSQL
                 txtFechaCobro.Text = unaFactura.FechaCobro.ToString("dd/MM/yyyy hh:mm tt");
 
             //Actualizamos el dataGridView con el detalle de los consumos para la factura
-            dataGridViewDetalleServicios.DataSource = null;
-            dataGridViewDetalleServicios.DataSource = AccesoDatos.ObtieneDetalleConsumosFactura(periodoFactura);
-        }
-
-       /// <summary>
-       /// Crea nueva factura para el periodo indicado
-       /// </summary>
-       /// <param name="periodo">El periodo para el cual se realizará la factura</param>
-        private void CrearNuevaFactura(string periodo)
-        {
-            lblPeriodo.Text = periodo;
-
-            //Aqui llenamos el comboBox de Servicios
-            List<string> nombresServicios = AccesoDatos.ObtieneListaNombreServicios();
-
-            lstServicios.DataSource = null;
-            lstServicios.DataSource = nombresServicios;
-            lstServicios.SelectedIndex = 0;
-
-            //Aqui creamos una nueva Factura
-            Factura nuevaFactura = new Factura
-            {
-                Periodo = periodo,
-                Valor = 0,
-                EstaCompleta = false,
-                FechaCobro = new DateTime()
-            };
-
-            List<Consumo> losConsumos = new List<Consumo>();
-            Consumo unConsumo;
-
-            foreach (string unServicio in nombresServicios)
-            {
-                unConsumo = new Consumo
-                {
-                    Servicio = unServicio,
-                    Tarifa = 0,
-                    UnidadesConsumidas = 0,
-                    ValorConsumo = 0
-                };
-
-                losConsumos.Add(unConsumo);
-            }
-
-            nuevaFactura.Consumos = losConsumos;
-
-            //Finalmente la insertamos en la base de datos
-            AccesoDatos.InsertaNuevaFactura(nuevaFactura);
-
-            //Actualizamos el dataGridView con el detalle de los consumos para la factura
-            dataGridViewDetalleConsumos.DataSource = null;
-            dataGridViewDetalleConsumos.DataSource = AccesoDatos.ObtieneDetalleConsumosFactura(periodo);
-
-            //Actualizamos campos adicionales
-            lblValorFactura.Text = nuevaFactura.Valor.ToString();
+            ActualizaDataGridConsumosServicios(periodoFactura, dataGridViewDetalleServicios);
         }
 
         /// <summary>
-        /// Evento asociado al botón de cancelar la factura
+        /// Actualiza el datagridview con la información de los consumos por servicio asociados a la factura
         /// </summary>
-        private void btnCancelarFactura_Click(object sender, EventArgs e)
+        /// <param name="periodoFactura"></param>
+        /// <param name="gridConsumos"></param>
+        private void ActualizaDataGridConsumosServicios(string periodoFactura, DataGridView gridConsumos)
         {
-            //Reversamos la creación de la factura según el periodo seleccionado
-            string periodo = lblPeriodo.Text;
-            AccesoDatos.BorraFactura(periodo);
-            
-            lblSelectorPeriodo.Visible = true;
-
-            dtpPeriodo.Value = DateTime.Now;
-            dtpPeriodo.Visible = true;
-
-            btnNuevaFactura.Visible = true;
-            groupBoxDetalleServicio.Visible = false;
+            gridConsumos.DataSource = null;
+            gridConsumos.DataSource = AccesoDatos.ObtieneDetalleConsumosFactura(periodoFactura);
         }
 
         /// <summary>
-        /// Evento asociado al botón de finalizar la factura
+        /// Calcula el valor del consumo del servicio activo
         /// </summary>
-        private void btnFinalizar_Click(object sender, EventArgs e)
-        {
-            //Se finaliza la factura, colocandola en completa
-            string periodoFactura = lblPeriodo.Text;
-            AccesoDatos.RecalculaValorFactura(periodoFactura);
-
-            //Se reinicia la interfaz de esta página
-            lblSelectorPeriodo.Visible = true;
-            dtpPeriodo.Visible = true;
-            dtpPeriodo.Value = DateTime.Now;
-            btnNuevaFactura.Visible = true;
-            groupBoxDetalleServicio.Visible = false;
-        }
-
-        private void btnActualizarConsumoServicio_Click(object sender, EventArgs e)
-        {
-            string periodoFactura = lblPeriodo.Text;
-            Consumo consumoRegistrado = new Consumo
-            {
-                Servicio = lstServicios.SelectedItem.ToString(),
-                UnidadesConsumidas = double.Parse(txtUnidadesConsumidas.Text),
-                Tarifa = double.Parse(txtTarifa.Text),
-                ValorConsumo = double.Parse(txtValorConsumo.Text)
-            };
-
-            AccesoDatos.ActualizaConsumoEnFactura(periodoFactura, consumoRegistrado);
-
-            //Actualizamos el dataGridView con el detalle de los consumos para la factura
-            dataGridViewDetalleConsumos.DataSource = null;
-            dataGridViewDetalleConsumos.DataSource = AccesoDatos.ObtieneDetalleConsumosFactura(periodoFactura);
-
-            //Finalmente actualizamos los campos de la factura con este nuevo dato
-            Factura facturaActual = AccesoDatos.ObtieneUnaFactura(periodoFactura);
-            lblValorFactura.Text = facturaActual.Valor.ToString();
-        }
-
-        private void ActualizaInfoConsumo()
-        {
-            string periodoFactura = lblPeriodo.Text;
-            string nombreServicio = lstServicios.SelectedItem.ToString();
-
-            Consumo elConsumo = AccesoDatos.ObtieneConsumoServicio(periodoFactura, nombreServicio);
-
-            txtUnidadesConsumidas.Text = elConsumo.UnidadesConsumidas.ToString();
-            txtTarifa.Text = elConsumo.Tarifa.ToString();
-            txtValorConsumo.Text = elConsumo.ValorConsumo.ToString();
-        }
-
-        private void txtUnidadesConsumidas_Leave(object sender, EventArgs e)
-        {
-            CalculaConsumoServicio();
-        }
-
-        private void txtTarifa_Leave(object sender, EventArgs e)
-        {
-            CalculaConsumoServicio();
-        }
-
         private void CalculaConsumoServicio()
         {
-            double unidadesConsumidas, tarifa;
+            string periodoFactura = lblPeriodo.Text;
+            double unidadesConsumidas, tarifa, valorConsumo;
 
             unidadesConsumidas = double.Parse(txtUnidadesConsumidas.Text);
             tarifa = double.Parse(txtTarifa.Text);
+            valorConsumo = unidadesConsumidas * tarifa;
+            txtValorConsumo.Text = valorConsumo.ToString();
 
-            txtValorConsumo.Text = (unidadesConsumidas * tarifa).ToString();
+            if (valorConsumo != 0)
+            {
+                Consumo consumoRegistrado = new Consumo
+                {
+                    Servicio = listaServicios.SelectedItem.ToString(),
+                    UnidadesConsumidas = unidadesConsumidas,
+                    Tarifa = tarifa,
+                    ValorConsumo = valorConsumo
+                };
+
+                AccesoDatos.ActualizaConsumoEnFactura(periodoFactura, consumoRegistrado);
+
+                //Actualizamos el dataGridView con el detalle de los consumos para la factura
+                ActualizaDataGridConsumosServicios(periodoFactura, dataGridViewDetalleConsumos);
+
+                //Finalmente actualizamos los campos de la factura con este nuevo dato
+                Factura facturaActual = AccesoDatos.ObtieneUnaFactura(periodoFactura);
+                lblValorFactura.Text = facturaActual.Valor.ToString();
+            }
         }
 
-        private void PaginaCreacion_Leave(object sender, EventArgs e)
-        {
-            //Se reinicia la interfaz de esta página
-            lblSelectorPeriodo.Visible = true;
-            dtpPeriodo.Visible = true;
-            dtpPeriodo.Value = DateTime.Now;
-            btnNuevaFactura.Visible = true;
-            groupBoxDetalleServicio.Visible = false;
-        }
-
-        private void paginaConsulta_Enter(object sender, EventArgs e)
-        {
-            InicializaListaPeriodoFacturas();
-        }
-
-        private void lstServicios_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ActualizaInfoConsumo();
-        }
+        #endregion MetodosInterfaz
     }
 }
